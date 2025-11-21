@@ -26,21 +26,28 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Log in" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 rounded-lg bg-green-50 p-4 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
                     {status}
                 </div>
             )}
 
+            <div className="mb-6 text-center">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Welcome Back</h2>
+                <p className="mt-2 text-gray-600 dark:text-gray-300">
+                    Continue your journey to master technical interviews
+                </p>
+            </div>
+
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="Email Address" />
 
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-yellow-500"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
@@ -50,14 +57,24 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <div className="flex items-center justify-between">
+                        <InputLabel htmlFor="password" value="Password" />
+                        {canResetPassword && (
+                            <Link
+                                href={route('password.request')}
+                                className="text-sm text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
+                            >
+                                Forgot password?
+                            </Link>
+                        )}
+                    </div>
 
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-yellow-500"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
@@ -73,6 +90,7 @@ export default function Login({ status, canResetPassword }) {
                             onChange={(e) =>
                                 setData('remember', e.target.checked)
                             }
+                            className="rounded border-gray-300 text-yellow-600 shadow-sm focus:border-yellow-300 focus:ring focus:ring-yellow-200 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-800"
                         />
                         <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
                             Remember me
@@ -80,18 +98,9 @@ export default function Login({ status, canResetPassword }) {
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
+                <div className="mt-6">
+                    <PrimaryButton className="w-full justify-center rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 py-3 text-base font-semibold hover:from-yellow-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:from-yellow-600 dark:to-orange-600 dark:hover:from-yellow-700 dark:hover:to-orange-700" disabled={processing}>
+                        Sign In
                     </PrimaryButton>
                 </div>
             </form>
@@ -102,7 +111,7 @@ export default function Login({ status, canResetPassword }) {
                         <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="bg-white px-2 text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+                        <span className="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
                             Or continue with
                         </span>
                     </div>
@@ -112,7 +121,7 @@ export default function Login({ status, canResetPassword }) {
                     <div>
                         <a
                             href={route('social.redirect', 'google')}
-                            className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                         >
                             <span className="sr-only">Sign in with Google</span>
                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -124,7 +133,7 @@ export default function Login({ status, canResetPassword }) {
                     <div>
                         <a
                             href={route('social.redirect', 'github')}
-                            className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                         >
                             <span className="sr-only">Sign in with GitHub</span>
                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -136,7 +145,7 @@ export default function Login({ status, canResetPassword }) {
                     <div>
                         <a
                             href={route('social.redirect', 'linkedin')}
-                            className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                            className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-800 shadow-sm hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                         >
                             <span className="sr-only">Sign in with LinkedIn</span>
                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -145,6 +154,18 @@ export default function Login({ status, canResetPassword }) {
                         </a>
                     </div>
                 </div>
+            </div>
+
+            <div className="mt-6 text-center">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Don't have an account?{' '}
+                    <Link
+                        href={route('register')}
+                        className="font-medium text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
+                    >
+                        Sign up
+                    </Link>
+                </p>
             </div>
         </GuestLayout>
     );

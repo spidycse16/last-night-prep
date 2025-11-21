@@ -19,7 +19,7 @@ export default function Navbar({ auth, tags = [] }) {
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                             <Link
                                 href={route('dashboard')}
-                                className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:border-indigo-400 dark:text-white"
+                                className="inline-flex items-center border-b-2 border-yellow-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:border-yellow-400 dark:text-white"
                             >
                                 Dashboard
                             </Link>
@@ -61,7 +61,7 @@ export default function Navbar({ auth, tags = [] }) {
                                                 <Link
                                                     key={tag.tag_id || tag.id}
                                                     href="#"
-                                                    className="inline-flex items-center rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-800 hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-100 dark:hover:bg-indigo-800"
+                                                    className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900 dark:text-yellow-100 dark:hover:bg-yellow-800"
                                                 >
                                                     {tag.name}
                                                 </Link>
@@ -78,10 +78,10 @@ export default function Navbar({ auth, tags = [] }) {
                                 <button
                                     type="button"
                                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                    className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800"
+                                    className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:bg-gray-800"
                                 >
                                     <span className="sr-only">Open user menu</span>
-                                    <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold">
+                                    <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-bold">
                                         {auth?.user?.name?.charAt(0) || 'U'}
                                     </div>
                                 </button>
@@ -113,7 +113,7 @@ export default function Navbar({ auth, tags = [] }) {
                         <button
                             type="button"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                            className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-500 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                         >
                             <span className="sr-only">Open main menu</span>
                             <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -130,7 +130,7 @@ export default function Navbar({ auth, tags = [] }) {
                     <div className="space-y-1 pb-3 pt-2">
                         <Link
                             href={route('dashboard')}
-                            className="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/20 dark:text-indigo-200"
+                            className="block border-l-4 border-yellow-500 bg-yellow-50 py-2 pl-3 pr-4 text-base font-medium text-yellow-700 dark:border-yellow-400 dark:bg-yellow-900/20 dark:text-yellow-200"
                         >
                             Dashboard
                         </Link>
@@ -150,7 +150,7 @@ export default function Navbar({ auth, tags = [] }) {
                     <div className="border-t border-gray-200 pb-3 pt-4 dark:border-gray-700">
                         <div className="flex items-center px-4">
                             <div className="flex-shrink-0">
-                                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold">
+                                <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-800 font-bold">
                                     {auth?.user?.name?.charAt(0) || 'U'}
                                 </div>
                             </div>

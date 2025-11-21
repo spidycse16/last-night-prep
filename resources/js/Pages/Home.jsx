@@ -1,9 +1,20 @@
 import { Head, Link } from '@inertiajs/react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
-export default function Home({ auth, questions }) {
+export default function Welcome({ auth, questions = [] }) {
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [expandedQuestions, setExpandedQuestions] = useState({});
+    const [expandedAnswers, setExpandedAnswers] = useState({});
+    const [likedQuestions, setLikedQuestions] = useState({});
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            setMousePosition({ x: e.clientX, y: e.clientY });
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
 
     const toggleQuestion = (questionId) => {
         setExpandedQuestions(prev => ({
@@ -12,236 +23,355 @@ export default function Home({ auth, questions }) {
         }));
     };
 
+    const toggleAnswer = (answerId) => {
+        setExpandedAnswers(prev => ({
+            ...prev,
+            [answerId]: !prev[answerId]
+        }));
+    };
+
+    const handleLike = (questionId) => {
+        if (!auth.user) {
+            // Redirect to login if not authenticated
+            window.location.href = route('login');
+            return;
+        }
+        
+        // Toggle like state (in a real app, this would make an API call)
+        setLikedQuestions(prev => ({
+            ...prev,
+            [questionId]: !prev[questionId]
+        }));
+    };
+
+    // Sample questions data with answers for demonstration
+    const sampleQuestions = [
+        {
+            id: 1,
+            title: "Explain the differences between React and Vue.js",
+            content: "Both React and Vue.js are popular JavaScript frameworks for building user interfaces. React is a library developed by Facebook, while Vue.js is a progressive framework created by Evan You. React uses JSX syntax and has a steeper learning curve, while Vue.js uses a template-based approach and is generally easier to learn.",
+            tags: ["React", "Vue.js", "JavaScript"],
+            likes: 24,
+            answers: 8,
+            answers_data: [
+                {
+                    id: 101,
+                    content: "React is a library while Vue is a framework. React requires more boilerplate code but offers more flexibility. Vue has a gentler learning curve and built-in solutions for routing and state management.",
+                    author: "Alex Johnson",
+                    likes: 15,
+                    is_accepted: true
+                },
+                {
+                    id: 102,
+                    content: "In my experience, React is better for large-scale applications with complex state management needs. Vue is excellent for rapid prototyping and smaller projects where you want to get something up quickly.",
+                    author: "Sarah Williams",
+                    likes: 8,
+                    is_accepted: false
+                }
+            ]
+        },
+        {
+            id: 2,
+            title: "What is the difference between == and === in JavaScript?",
+            content: "In JavaScript, == is the equality operator that performs type coercion, while === is the strict equality operator that does not perform type coercion. For example, '5' == 5 returns true because JavaScript converts the string to a number, but '5' === 5 returns false because they are different types.",
+            tags: ["JavaScript", "Equality", "Type Coercion"],
+            likes: 42,
+            answers: 12,
+            answers_data: [
+                {
+                    id: 201,
+                    content: "The == operator compares values after converting both operands to a common type. The === operator compares both value and type without conversion. Always use === to avoid unexpected behavior.",
+                    author: "Mike Chen",
+                    likes: 22,
+                    is_accepted: true
+                },
+                {
+                    id: 202,
+                    content: "Here's a simple example: 0 == false // true, 0 === false // false. The first converts false to 0, while the second checks both type and value.",
+                    author: "Emma Davis",
+                    likes: 17,
+                    is_accepted: false
+                }
+            ]
+        },
+        {
+            id: 3,
+            title: "How does the CSS Box Model work?",
+            content: "The CSS Box Model describes how every HTML element is represented as a rectangular box with four areas: content, padding, border, and margin. The total width of an element is calculated as: width + padding-left + padding-right + border-left + border-right + margin-left + margin-right. Understanding the box model is crucial for proper layout design.",
+            tags: ["CSS", "Box Model", "Layout"],
+            likes: 31,
+            answers: 5,
+            answers_data: [
+                {
+                    id: 301,
+                    content: "The box-sizing property can change how the total width is calculated. box-sizing: content-box (default) includes padding and border in the total width. box-sizing: border-box includes padding and border in the defined width.",
+                    author: "David Brown",
+                    likes: 19,
+                    is_accepted: true
+                }
+            ]
+        }
+    ];
+
+    const questionsToDisplay = questions.length > 0 ? questions : sampleQuestions;
+
     return (
         <>
-            <Head title="Home" />
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-                {/* Header */}
-                <header className="bg-white shadow dark:bg-gray-800">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                                <h1 className="ml-3 text-2xl font-bold text-gray-900 dark:text-white">
-                                    Interview Q&A Platform
-                                </h1>
+            <Head title="Welcome" />
+            <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+                {/* Animated Background Orbs */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+                    <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animation-delay-2000 animate-blob"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animation-delay-4000 animate-blob"></div>
+                </div>
+
+                <div className="relative min-h-screen flex flex-col items-center justify-center px-6 py-12">
+                    <div className="w-full max-w-7xl mx-auto">
+
+                        {/* Header */}
+                        <motion.header
+                            initial={{ y: -50, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.8 }}
+                            className="flex flex-col lg:flex-row items-center justify-between gap-8 mb-20"
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-yellow-400 blur-xl opacity-60 animate-pulse"></div>
+                                    <div className="relative p-3 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-2xl shadow-2xl">
+                                        <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <span className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500">
+                                    Final<span className="text-white">NightPrep</span>
+                                </span>
                             </div>
-                            <nav className="flex space-x-4">
+
+                            <nav className="flex gap-4">
                                 {auth.user ? (
-                                    <>
-                                        <Link
-                                            href={route('dashboard')}
-                                            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        >
-                                            Dashboard
-                                        </Link>
-                                        <Link
-                                            href={route('profile.edit')}
-                                            className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-                                        >
-                                            Profile
-                                        </Link>
-                                    </>
+                                    <Link href={route('dashboard')} className="px-8 py-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full text-white font-medium hover:bg-white/20 transition">
+                                        Dashboard
+                                    </Link>
                                 ) : (
                                     <>
-                                        <Link
-                                            href={route('login')}
-                                            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        >
+                                        <Link href={route('login')} className="px-6 py-3 text-white/80 hover:text-white transition">
                                             Log in
                                         </Link>
-                                        <Link
-                                            href={route('register')}
-                                            className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-                                        >
+                                        <Link href={route('register')} className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full text-white font-bold shadow-lg hover:shadow-yellow-500/50 transform hover:scale-105 transition">
                                             Register
                                         </Link>
                                     </>
                                 )}
                             </nav>
-                        </div>
-                    </div>
-                </header>
+                        </motion.header>
 
-                {/* Hero Section */}
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 py-16">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="text-center">
-                            <h1 className="text-4xl font-extrabold text-white sm:text-5xl sm:tracking-tight lg:text-6xl">
-                                Prepare for Your Next Interview
+                        {/* Hero Section */}
+                        <motion.section
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.9, delay: 0.2 }}
+                            className="text-center mb-24"
+                        >
+                            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+                                Master Technical Interviews with <br />
+                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500">
+                                    FinalNightPrep
+                                </span>
                             </h1>
-                            <p className="mx-auto mt-6 max-w-2xl text-xl text-indigo-100">
-                                Join our community of job seekers and professionals to practice interview questions, 
-                                share knowledge, and advance your career.
+                            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-10 leading-relaxed">
+                                AI-powered mock interviews • Instant feedback • Real questions from FAANG & startups
                             </p>
-                            {!auth.user && (
-                                <div className="mt-10 flex justify-center">
-                                    <Link
-                                        href={route('register')}
-                                        className="inline-flex items-center rounded-md border border-transparent bg-white px-6 py-3 text-base font-medium text-indigo-600 shadow-sm hover:bg-indigo-50"
-                                    >
-                                        Get Started
-                                    </Link>
-                                    <Link
-                                        href={route('login')}
-                                        className="ml-4 inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-6 py-3 text-base font-medium text-indigo-700 shadow-sm hover:bg-indigo-200"
-                                    >
-                                        Sign In
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
 
-                {/* Browse Questions Section */}
-                <div className="py-12">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="text-center">
-                            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
-                                Popular Interview Questions
-                            </h2>
-                            <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400">
-                                Browse through commonly asked interview questions across various topics
-                            </p>
+                            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                                {auth.user ? (
+                                    <Link href={route('dashboard')} className="group px-10 py-5 text-lg font-bold text-black bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-2xl hover:shadow-yellow-400/60 transform hover:scale-105 transition flex items-center gap-3">
+                                        Go to Dashboard
+                                        <svg className="w-5 h-5 group-hover:translate-x-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <Link href={route('register')} className="px-12 py-5 text-lg font-bold text-black bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-2xl hover:shadow-yellow-400/60 transform hover:scale-105 transition">
+                                            Get Started Free
+                                        </Link>
+                                        <Link href={route('login')} className="px-12 py-5 text-lg font-medium text-white border-2 border-white/30 backdrop-blur-lg rounded-full hover:bg-white/10 transition">
+                                            Sign In
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
+                        </motion.section>
+
+                        {/* Features Grid */}
+                        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-24">
+                            {[
+                                { icon: "💻", title: "Real Interview Simulations", desc: "Practice with AI-generated questions that mimic real technical interviews from top tech companies." },
+                                { icon: "🤖", title: "AI-Powered Feedback", desc: "Get detailed analysis of your responses with suggestions for improvement and performance metrics." },
+                                { icon: "📊", title: "Track Your Progress", desc: "Monitor your improvement over time with detailed analytics and performance insights." },
+                            ].map((feature, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: i * 0.2 }}
+                                    viewport={{ once: true }}
+                                    className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 hover:border-white/30 transition-all duration-500 transform hover:-translate-y-3"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition"></div>
+                                    <div className="relative z-10">
+                                        <div className="text-5xl mb-4">{feature.icon}</div>
+                                        <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+                                        <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
 
-                        <div className="mt-10">
+                        {/* Questions Section */}
+                        <motion.section
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                            className="mb-24"
+                        >
+                            <div className="text-center mb-16">
+                                <h2 className="text-4xl font-black text-white mb-4">
+                                    Popular Interview Questions
+                                </h2>
+                                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                                    Browse our collection of real interview questions and prepare for your next opportunity
+                                </p>
+                            </div>
+
                             <div className="space-y-6">
-                                {questions.map((question) => (
+                                {questionsToDisplay.map((question) => (
                                     <div 
-                                        key={question.question_id} 
-                                        className="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800"
+                                        key={question.id} 
+                                        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 hover:border-white/30 transition-all duration-300"
                                     >
                                         <div className="p-6">
-                                            <div className="flex items-center justify-between">
-                                                <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${
-                                                    question.difficulty === 'easy' 
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' 
-                                                        : question.difficulty === 'medium' 
-                                                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100' 
-                                                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
-                                                }`}>
-                                                    {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
-                                                </span>
-                                                {question.is_solved && (
-                                                    <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-100">
-                                                        Solved
+                                            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                                                <h3 className="text-xl font-bold text-white">
+                                                    {question.title}
+                                                </h3>
+                                                <div className="flex items-center space-x-4">
+                                                    <button
+                                                        onClick={() => handleLike(question.id)}
+                                                        className={`flex items-center space-x-1 ${
+                                                            likedQuestions[question.id] 
+                                                                ? 'text-yellow-400' 
+                                                                : 'text-gray-400 hover:text-yellow-400'
+                                                        }`}
+                                                    >
+                                                        <svg className="w-5 h-5" fill={likedQuestions[question.id] ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                                                        </svg>
+                                                        <span>{question.likes + (likedQuestions[question.id] ? 1 : 0)}</span>
+                                                    </button>
+                                                    <span className="text-gray-400 text-sm">
+                                                        {question.answers} answers
                                                     </span>
-                                                )}
-                                            </div>
-                                            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-                                                {question.title}
-                                            </h3>
-                                            <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                Asked by {question.user_name} • {new Date(question.created_at).toLocaleDateString()}
-                                            </div>
-                                            <div className="mt-4 flex items-center justify-between">
-                                                <div className="flex space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                                                    <span>{question.vote_count} votes</span>
-                                                    <span>{question.answer_count} answers</span>
-                                                    <span>{question.view_count} views</span>
                                                 </div>
+                                            </div>
+
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {question.tags && question.tags.map((tag, index) => (
+                                                    <span 
+                                                        key={index} 
+                                                        className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs font-medium"
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <p className={`${expandedQuestions[question.id] ? '' : 'line-clamp-2'} text-gray-300`}>
+                                                    {question.content}
+                                                </p>
+                                            </div>
+
+                                            <div className="flex items-center justify-between">
                                                 <button
-                                                    onClick={() => toggleQuestion(question.question_id)}
-                                                    className="flex items-center text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                                    onClick={() => toggleQuestion(question.id)}
+                                                    className="text-yellow-400 hover:text-yellow-300 font-medium flex items-center"
                                                 >
-                                                    <span>{expandedQuestions[question.question_id] ? 'Hide' : 'View'} Answers</span>
+                                                    {expandedQuestions[question.id] ? 'Show less' : 'Read more'}
                                                     <svg 
-                                                        className={`ml-1 h-5 w-5 transform transition-transform ${
-                                                            expandedQuestions[question.question_id] ? 'rotate-180' : ''
+                                                        className={`ml-2 w-4 h-4 transform transition-transform ${
+                                                            expandedQuestions[question.id] ? 'rotate-180' : ''
                                                         }`} 
                                                         fill="none" 
-                                                        viewBox="0 0 24 24" 
-                                                        stroke="currentColor"
+                                                        stroke="currentColor" 
+                                                        viewBox="0 0 24 24"
                                                     >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                                                     </svg>
                                                 </button>
+
+                                                <div className="flex space-x-3">
+                                                    {auth.user ? (
+                                                        <Link 
+                                                            href={route('questions.show', question.id)}
+                                                            className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg text-sm font-medium hover:from-yellow-600 hover:to-orange-600 transition"
+                                                        >
+                                                            View Discussion
+                                                        </Link>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => window.location.href = route('login')}
+                                                            className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg text-sm font-medium hover:from-yellow-600 hover:to-orange-600 transition"
+                                                        >
+                                                            Login to Comment
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </div>
 
-                                            {/* Expanded Answers Section */}
-                                            {expandedQuestions[question.question_id] && (
-                                                <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
-                                                    <h4 className="text-md font-medium text-gray-900 dark:text-white">
-                                                        {question.answer_count} Answer{question.answer_count !== 1 ? 's' : ''}
+                                            {/* Answers Section */}
+                                            {expandedQuestions[question.id] && question.answers_data && (
+                                                <div className="mt-6 pt-6 border-t border-white/10">
+                                                    <h4 className="text-lg font-semibold text-white mb-4">
+                                                        Answers ({question.answers_data.length})
                                                     </h4>
-                                                    
-                                                    <div className="mt-4 space-y-6">
-                                                        {question.answers.length > 0 ? (
-                                                            question.answers.map((answer) => (
-                                                                <div 
-                                                                    key={answer.answer_id} 
-                                                                    className={`rounded-lg p-4 ${
-                                                                        answer.is_accepted 
-                                                                            ? 'bg-green-50 dark:bg-green-900/20' 
-                                                                            : 'bg-gray-50 dark:bg-gray-700/50'
-                                                                    }`}
-                                                                >
-                                                                    {answer.is_accepted && (
-                                                                        <div className="mb-2 flex items-center">
-                                                                            <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-100">
-                                                                                Accepted Answer
-                                                                            </span>
-                                                                        </div>
-                                                                    )}
-                                                                    <div className="prose prose-indigo max-w-none dark:prose-invert">
-                                                                        {answer.body.split('\n').map((line, index) => (
-                                                                            line.startsWith('```') ? (
-                                                                                <pre key={index} className="rounded bg-gray-800 p-4 text-white">
-                                                                                    <code>{line.replace(/```/g, '')}</code>
-                                                                                </pre>
-                                                                            ) : (
-                                                                                <p key={index}>{line}</p>
-                                                                            )
-                                                                        ))}
-                                                                    </div>
-                                                                    <div className="mt-4 flex items-center justify-between">
-                                                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                            Answered by {answer.user_name} • {new Date(answer.created_at).toLocaleDateString()}
-                                                                        </div>
-                                                                        <div className="flex items-center">
-                                                                            <button className="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-                                                                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                                                                </svg>
-                                                                                <span className="ml-1">{answer.vote_count}</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            ))
-                                                        ) : (
-                                                            <div className="text-center text-gray-500 dark:text-gray-400">
-                                                                No answers yet. Be the first to answer!
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {/* Action buttons for logged in users */}
-                                                    <div className="mt-6 flex justify-between">
-                                                        {auth.user ? (
-                                                            <Link
-                                                                href="#"
-                                                                className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700"
+                                                    <div className="space-y-4">
+                                                        {question.answers_data.map((answer) => (
+                                                            <div 
+                                                                key={answer.id} 
+                                                                className="bg-white/5 rounded-xl p-4"
                                                             >
-                                                                Post Your Answer
-                                                            </Link>
-                                                        ) : (
-                                                            <div className="text-center">
-                                                                <p className="text-gray-600 dark:text-gray-400">
-                                                                    Please <Link href={route('login')} className="text-indigo-600 hover:underline dark:text-indigo-400">log in</Link> to post your answer, comment, or vote.
-                                                                </p>
-                                                                <div className="mt-4">
-                                                                    <Link
-                                                                        href={route('login')}
-                                                                        className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700"
-                                                                    >
-                                                                        Log in to Participate
-                                                                    </Link>
+                                                                <div className="flex items-center justify-between mb-2">
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <span className="text-sm font-medium text-yellow-400">
+                                                                            {answer.author}
+                                                                        </span>
+                                                                        {answer.is_accepted && (
+                                                                            <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
+                                                                                Accepted
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <button className="text-gray-400 hover:text-yellow-400">
+                                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                        <span className="text-xs text-gray-400">
+                                                                            {answer.likes} likes
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
+                                                                <p className="text-gray-300 text-sm">
+                                                                    {answer.content}
+                                                                </p>
                                                             </div>
-                                                        )}
+                                                        ))}
                                                     </div>
                                                 </div>
                                             )}
@@ -249,105 +379,73 @@ export default function Home({ auth, questions }) {
                                     </div>
                                 ))}
                             </div>
-                        </div>
 
-                        <div className="mt-12 text-center">
-                            <Link
-                                href={auth.user ? route('dashboard') : route('login')}
-                                className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                            >
-                                {auth.user ? 'Browse All Questions' : 'Log in to Browse All Questions'}
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Features Section */}
-                <div className="bg-white py-12 dark:bg-gray-800">
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="lg:text-center">
-                            <h2 className="text-base font-semibold uppercase tracking-wide text-indigo-600">
-                                Features
-                            </h2>
-                            <p className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
-                                Everything you need to ace your interviews
-                            </p>
-                            <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
-                                Our platform provides comprehensive tools to help you prepare for technical and behavioral interviews.
-                            </p>
-                        </div>
-
-                        <div className="mt-10">
-                            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                                <div className="flex flex-col items-center text-center">
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-                                        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">Practice Questions</h3>
-                                    <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
-                                        Access thousands of real interview questions from top companies across various domains.
+                            {!auth.user && (
+                                <div className="text-center mt-10">
+                                    <p className="text-gray-300 mb-6">
+                                        Sign up to participate in discussions, ask questions, and track your progress
                                     </p>
-                                </div>
-
-                                <div className="flex flex-col items-center text-center">
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-                                        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    <Link 
+                                        href={route('register')}
+                                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-full font-bold hover:from-yellow-600 hover:to-orange-600 transition shadow-lg"
+                                    >
+                                        Create Free Account
+                                        <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                                         </svg>
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">Community Support</h3>
-                                    <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
-                                        Connect with other job seekers, share experiences, and get help from industry professionals.
-                                    </p>
+                                    </Link>
                                 </div>
+                            )}
+                        </motion.section>
 
-                                <div className="flex flex-col items-center text-center">
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-                                        <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">Track Progress</h3>
-                                    <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
-                                        Monitor your preparation progress with detailed analytics and personalized recommendations.
-                                    </p>
-                                </div>
+                        {/* CTA Section */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                            className="relative bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-600 rounded-3xl p-12 text-center shadow-2xl overflow-hidden"
+                        >
+                            <div className="absolute inset-0 bg-black/20"></div>
+                            <div className="relative z-10">
+                                <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+                                    Ready to Ace Your Next Interview?
+                                </h2>
+                                <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                                    Join thousands of developers who have landed their dream jobs with FinalNightPrep.
+                                </p>
+                                {!auth.user && (
+                                    <Link href={route('register')} className="inline-flex items-center px-12 py-5 text-xl font-bold text-orange-600 bg-white rounded-full shadow-xl hover:shadow-2xl transform hover:scale-110 transition">
+                                        Start Practicing Now → 
+                                    </Link>
+                                )}
                             </div>
-                        </div>
+                        </motion.div>
+
+                        <footer className="mt-20 text-center text-gray-500 text-sm">
+                            <p>© {new Date().getFullYear()} FinalNightPrep. Built for developers, by developers.</p>
+                        </footer>
                     </div>
                 </div>
-
-                {/* CTA Section */}
-                <div className="bg-indigo-700">
-                    <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:flex lg:items-center lg:justify-between lg:py-16 lg:px-8">
-                        <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                            <span className="block">Ready to start your interview preparation?</span>
-                            <span className="block text-indigo-200">Join our community today.</span>
-                        </h2>
-                        <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-                            <div className="inline-flex rounded-md shadow">
-                                <Link
-                                    href={auth.user ? route('dashboard') : route('register')}
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600 hover:bg-indigo-50"
-                                >
-                                    {auth.user ? 'Go to Dashboard' : 'Get started'}
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <footer className="bg-white dark:bg-gray-800">
-                    <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-                        <p className="text-center text-base text-gray-400">
-                            &copy; 2025 Interview Q&A Platform. All rights reserved.
-                        </p>
-                    </div>
-                </footer>
             </div>
+
+            <style jsx>{`
+                @keyframes blob {
+                    0% { transform: translate(0px, 0px) scale(1); }
+                    33% { transform: translate(30px, -50px) scale(1.1); }
+                    66% { transform: translate(-20px, 20px) scale(0.9); }
+                    100% { transform: translate(0px, 0px) scale(1); }
+                }
+                .animate-blob {
+                    animation: blob 20s infinite;
+                }
+                .animation-delay-2000 {
+                    animation-delay: 2s;
+                }
+                .animation-delay-4000 {
+                    animation-delay: 4s;
+                }
+            `}</style>
         </>
     );
 }

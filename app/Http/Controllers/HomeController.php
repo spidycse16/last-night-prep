@@ -29,8 +29,16 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        // Fetch answers for each question
-        $questionsWithAnswers = $questions->map(function ($question) {
+        // Format questions for the frontend
+        $formattedQuestions = $questions->map(function ($question) {
+            // Get tags for this question
+            $tags = DB::table('question_tags')
+                ->join('tags', 'question_tags.tag_id', '=', 'tags.tag_id')
+                ->where('question_tags.question_id', $question->question_id)
+                ->pluck('tags.name')
+                ->toArray();
+
+            // Get answers for this question
             $answers = DB::table('answers')
                 ->select(
                     'answers.answer_id',
@@ -44,10 +52,29 @@ class HomeController extends Controller
                 ->where('answers.question_id', $question->question_id)
                 ->orderBy('answers.is_accepted', 'desc')
                 ->orderBy('answers.vote_count', 'desc')
+                ->limit(3) // Limit to 3 answers for homepage
                 ->get();
 
-            $question->answers = $answers;
-            return $question;
+            // Format answers
+            $formattedAnswers = $answers->map(function ($answer) {
+                return [
+                    'id' => $answer->answer_id,
+                    'content' => $answer->body,
+                    'author' => $answer->user_name,
+                    'likes' => $answer->vote_count,
+                    'is_accepted' => $answer->is_accepted
+                ];
+            });
+
+            return [
+                'id' => $question->question_id,
+                'title' => $question->title,
+                'content' => 'This is a sample question content. In a real implementation, this would show the full question details.',
+                'tags' => $tags,
+                'likes' => $question->vote_count,
+                'answers' => $question->answer_count,
+                'answers_data' => $formattedAnswers
+            ];
         });
 
         // Fetch some tags for the navbar
@@ -57,7 +84,7 @@ class HomeController extends Controller
             ->get();
 
         return Inertia::render('Home', [
-            'questions' => $questionsWithAnswers,
+            'questions' => $formattedQuestions,
             'tags' => $tags,
         ]);
     }
