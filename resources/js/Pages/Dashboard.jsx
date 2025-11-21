@@ -207,21 +207,21 @@ export default function Dashboard({ auth, randomQuestions, tags }) {
                                 <div className="p-6">
                                     <div className="space-y-4">
                                         {randomQuestions && randomQuestions.map((question) => (
-                                            <div key={question.question_id} className="border-b border-gray-200 pb-4 dark:border-gray-700 last:border-0 last:pb-0">
+                                            <div key={question.id} className="border-b border-gray-200 pb-4 dark:border-gray-700 last:border-0 last:pb-0">
                                                 <div className="flex items-center justify-between">
                                                     <Link 
-                                                        href={route('questions.show', question.question_id)}
+                                                        href={route('questions.show', question.id)}
                                                         className="text-lg font-medium text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
                                                     >
                                                         {question.title}
                                                     </Link>
                                                     <button
-                                                        onClick={() => toggleQuestion(question.question_id)}
+                                                        onClick={() => toggleQuestion(question.id)}
                                                         className="flex items-center text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
                                                     >
                                                         <svg 
                                                             className={`h-5 w-5 transform transition-transform ${
-                                                                expandedQuestions[question.question_id] ? 'rotate-180' : ''
+                                                                expandedQuestions[question.id] ? 'rotate-180' : ''
                                                             }`} 
                                                             fill="none" 
                                                             viewBox="0 0 24 24" 
@@ -231,9 +231,49 @@ export default function Dashboard({ auth, randomQuestions, tags }) {
                                                         </svg>
                                                     </button>
                                                 </div>
-                                                {expandedQuestions[question.question_id] && (
-                                                    <div className="mt-2 text-gray-600 dark:text-gray-400">
-                                                        <p>This is a sample question content. In a real implementation, this would show the full question details.</p>
+                                                {expandedQuestions[question.id] && (
+                                                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                                        <h4 className="text-md font-semibold text-white mb-3">
+                                                            Answers ({question.answers})
+                                                        </h4>
+                                                        <div className="space-y-3">
+                                                            {question.answers_data && question.answers_data.length > 0 ? (
+                                                                question.answers_data.map((answer) => (
+                                                                    <div 
+                                                                        key={answer.id} 
+                                                                        className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3"
+                                                                    >
+                                                                        <div className="flex items-center justify-between mb-2">
+                                                                            <div className="flex items-center space-x-2">
+                                                                                <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
+                                                                                    {answer.author}
+                                                                                </span>
+                                                                                {answer.is_accepted && (
+                                                                                    <span className="px-2 py-1 bg-green-500/20 text-green-600 dark:text-green-400 text-xs rounded-full">
+                                                                                        Accepted
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                            <div className="flex items-center space-x-1">
+                                                                                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                                                                                </svg>
+                                                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                                                    {answer.likes} likes
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <p className="text-gray-700 dark:text-gray-300 text-sm">
+                                                                            {answer.content}
+                                                                        </p>
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                                                    No answers yet. Be the first to answer this question!
+                                                                </p>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>

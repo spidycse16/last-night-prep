@@ -1,10 +1,23 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { useState } from 'react';
 
 export default function Navbar({ auth, tags = [] }) {
+    const { url } = usePage();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isTagsOpen, setIsTagsOpen] = useState(false);
+
+    // Determine which nav item is active based on current URL
+    const isActive = (path) => {
+        if (path === 'dashboard') {
+            return url === '/dashboard';
+        } else if (path === 'questions') {
+            return url.startsWith('/questions');
+        } else if (path === 'ask') {
+            return url === '/questions/create';
+        }
+        return false;
+    };
 
     return (
         <nav className="bg-white shadow dark:bg-gray-800">
@@ -19,19 +32,31 @@ export default function Navbar({ auth, tags = [] }) {
                         <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                             <Link
                                 href={route('dashboard')}
-                                className="inline-flex items-center border-b-2 border-yellow-500 px-1 pt-1 text-sm font-medium text-gray-900 dark:border-yellow-400 dark:text-white"
+                                className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium ${
+                                    isActive('dashboard')
+                                        ? 'border-yellow-500 text-gray-900 dark:border-yellow-400 dark:text-white'
+                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-200'
+                                }`}
                             >
                                 Dashboard
                             </Link>
                             <Link
                                 href={route('questions.index')}
-                                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-200"
+                                className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium ${
+                                    isActive('questions')
+                                        ? 'border-yellow-500 text-gray-900 dark:border-yellow-400 dark:text-white'
+                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-200'
+                                }`}
                             >
                                 Questions
                             </Link>
                             <Link
                                 href={route('questions.create')}
-                                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-200"
+                                className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium ${
+                                    isActive('ask')
+                                        ? 'border-yellow-500 text-gray-900 dark:border-yellow-400 dark:text-white'
+                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-200'
+                                }`}
                             >
                                 Ask Question
                             </Link>
@@ -130,19 +155,31 @@ export default function Navbar({ auth, tags = [] }) {
                     <div className="space-y-1 pb-3 pt-2">
                         <Link
                             href={route('dashboard')}
-                            className="block border-l-4 border-yellow-500 bg-yellow-50 py-2 pl-3 pr-4 text-base font-medium text-yellow-700 dark:border-yellow-400 dark:bg-yellow-900/20 dark:text-yellow-200"
+                            className={`block border-l-4 py-2 pl-3 pr-4 text-base font-medium ${
+                                isActive('dashboard')
+                                    ? 'border-yellow-500 bg-yellow-50 text-yellow-700 dark:border-yellow-400 dark:bg-yellow-900/20 dark:text-yellow-200'
+                                    : 'border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+                            }`}
                         >
                             Dashboard
                         </Link>
                         <Link
                             href={route('questions.index')}
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                            className={`block border-l-4 py-2 pl-3 pr-4 text-base font-medium ${
+                                isActive('questions')
+                                    ? 'border-yellow-500 bg-yellow-50 text-yellow-700 dark:border-yellow-400 dark:bg-yellow-900/20 dark:text-yellow-200'
+                                    : 'border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+                            }`}
                         >
                             Questions
                         </Link>
                         <Link
                             href={route('questions.create')}
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                            className={`block border-l-4 py-2 pl-3 pr-4 text-base font-medium ${
+                                isActive('ask')
+                                    ? 'border-yellow-500 bg-yellow-50 text-yellow-700 dark:border-yellow-400 dark:bg-yellow-900/20 dark:text-yellow-200'
+                                    : 'border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+                            }`}
                         >
                             Ask Question
                         </Link>
