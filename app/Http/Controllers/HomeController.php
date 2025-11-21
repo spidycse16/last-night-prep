@@ -26,7 +26,7 @@ class HomeController extends Controller
             )
             ->join('users', 'questions.user_id', '=', 'users.id')
             ->orderBy('questions.view_count', 'desc')
-            ->limit(6)
+            ->limit(30)
             ->get();
 
         // Format questions for the frontend
@@ -52,7 +52,7 @@ class HomeController extends Controller
                 ->where('answers.question_id', $question->question_id)
                 ->orderBy('answers.is_accepted', 'desc')
                 ->orderBy('answers.vote_count', 'desc')
-                ->limit(3) // Limit to 3 answers for homepage
+                ->limit(5) // Limit to 3 answers for homepage
                 ->get();
 
             // Format answers
