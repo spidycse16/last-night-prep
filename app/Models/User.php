@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'password', // This will trigger the mutator to set password_hash
         'password_hash',
         'username',
         'role',

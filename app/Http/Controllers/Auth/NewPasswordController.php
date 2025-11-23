@@ -47,7 +47,7 @@ class NewPasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
+                    'password' => $request->password, // Mutator will hash this
                     'remember_token' => Str::random(60),
                 ])->save();
 

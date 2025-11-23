@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password, // Mutator will hash this
             'role' => 'job_seeker', // Default role
             'account_status' => 'active', // Default status
             'email_verified' => false, // Will be set to true after email verification

@@ -51,7 +51,7 @@ class SocialAuthController extends Controller
                     'name' => $socialUser->getName(),
                     'email' => $socialUser->getEmail(),
                     'username' => $this->generateUsername($socialUser->getName()),
-                    'password' => Hash::make(str()->random(24)), // Generate a random password
+                    'password' => str()->random(24), // Mutator will hash this
                     'role' => 'job_seeker',
                     'account_status' => 'active',
                     'email_verified' => true, // Social login users are considered verified
