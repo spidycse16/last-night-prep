@@ -36,6 +36,12 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('questions.index')} active={route().current('questions.index')}>
                                     Questions
                                 </NavLink>
+                                <NavLink href={route('questions.create')} active={route().current('questions.create')}>
+                                    Ask Question
+                                </NavLink>
+                                <NavLink href={route('questions.index', { user: user.id })} active={route().current('questions.index') && route().params.user == user.id}>
+                                    My Questions
+                                </NavLink>
                             </div>
                         </div>
 
@@ -109,6 +115,12 @@ export default function Authenticated({ user, header, children }) {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('questions.index')} active={route().current('questions.index')}>
                             Questions
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('questions.create')} active={route().current('questions.create')}>
+                            Ask Question
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('questions.index', { user: user.id })} active={route().current('questions.index') && route().params.user == user.id}>
+                            My Questions
                         </ResponsiveNavLink>
                     </div>
 
