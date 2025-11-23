@@ -3,29 +3,30 @@ import { Link } from '@inertiajs/react';
 
 export default function GuestLayout({ children }) {
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-6 sm:pt-0 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-            <div className="mb-8">
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20" />
+        <div className="flex min-h-screen flex-col items-center justify-center bg-[#0F1117] pt-6 sm:pt-0 relative overflow-hidden">
+            {/* Background Blobs */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/20 blur-[120px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-900/20 blur-[120px]"></div>
+            </div>
+
+            <div className="z-10 mb-8">
+                <Link href="/" className="flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <span className="text-2xl font-bold text-white tracking-tight">FinalNight<span className="text-indigo-400">Prep</span></span>
                 </Link>
             </div>
 
-            <div className="w-full overflow-hidden rounded-2xl bg-white shadow-xl sm:max-w-md sm:rounded-2xl dark:bg-gray-800">
-                <div className="rounded-t-2xl bg-gradient-to-r from-yellow-500 to-orange-500 p-6 text-center dark:from-yellow-600 dark:to-orange-600">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
-                        <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                        </svg>
-                    </div>
-                    <h1 className="mt-2 text-2xl font-bold text-white">FinalNightPrep</h1>
-                    <p className="mt-1 text-sm text-yellow-100">Master Your Technical Interviews</p>
-                </div>
-                
+            <div className="z-10 w-full overflow-hidden rounded-2xl bg-[#161b22] border border-white/5 shadow-2xl sm:max-w-md">
                 <div className="px-6 py-8 sm:px-10">
                     {children}
                 </div>
             </div>
-            
+
             <div className="mt-8 text-center">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                     © {new Date().getFullYear()} FinalNightPrep. All rights reserved.

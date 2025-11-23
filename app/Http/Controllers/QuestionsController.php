@@ -65,6 +65,40 @@ class QuestionsController extends Controller
             ->paginate(10)
             ->appends($request->except('page'));
 
+        // Transform the collection to include answers
+        $questions->getCollection()->transform(function ($question) {
+            // Get answers for this question
+            $answers = DB::table('answers')
+                ->select(
+                    'answers.answer_id',
+                    'answers.body',
+                    'answers.vote_count',
+                    'answers.is_accepted',
+                    'answers.created_at',
+                    'users.name as user_name'
+                )
+                ->join('users', 'answers.user_id', '=', 'users.id')
+                ->where('answers.question_id', $question->question_id)
+                ->orderBy('answers.is_accepted', 'desc')
+                ->orderBy('answers.vote_count', 'desc')
+                ->limit(3)
+                ->get();
+
+            // Format answers
+            $formattedAnswers = $answers->map(function ($answer) {
+                return [
+                    'id' => $answer->answer_id,
+                    'content' => $answer->body,
+                    'author' => $answer->user_name,
+                    'likes' => $answer->vote_count,
+                    'is_accepted' => $answer->is_accepted
+                ];
+            });
+
+            $question->answers_data = $formattedAnswers;
+            return $question;
+        });
+
         return Inertia::render('Questions/Index', [
             'questions' => $questions,
         ]);
