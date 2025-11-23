@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 
-export default function Dashboard({ auth, randomQuestions = [], tags = [] }) {
+export default function Dashboard({ auth, randomQuestions = [] }) {
     const [expandedQuestions, setExpandedQuestions] = useState({});
     const [aiAnswers, setAiAnswers] = useState({});
     const [loadingAi, setLoadingAi] = useState({});
@@ -53,7 +53,6 @@ export default function Dashboard({ auth, randomQuestions = [], tags = [] }) {
         <AuthenticatedLayout
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-white leading-tight">Dashboard</h2>}
-            tags={tags}
         >
             <Head title="Dashboard" />
 

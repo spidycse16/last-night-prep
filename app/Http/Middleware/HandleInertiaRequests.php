@@ -29,11 +29,23 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $categories = [];
+        
+        if ($request->user()) {
+            $categories = \Illuminate\Support\Facades\DB::table('tags')
+                ->select('tag_id', 'name', 'category', 'question_count')
+                ->orderBy('category')
+                ->orderBy('name')
+                ->get()
+                ->groupBy('category');
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'categories' => $categories,
         ];
     }
 }

@@ -12,44 +12,34 @@ class TagSeeder extends Seeder
      */
     public function run(): void
     {
-        $tags = [
-            ['name' => 'Python', 'description' => 'Python programming language', 'category' => 'Programming Language'],
-            ['name' => 'JavaScript', 'description' => 'JavaScript programming language', 'category' => 'Programming Language'],
-            ['name' => 'Java', 'description' => 'Java programming language', 'category' => 'Programming Language'],
-            ['name' => 'C++', 'description' => 'C++ programming language', 'category' => 'Programming Language'],
-            ['name' => 'React', 'description' => 'React JavaScript library', 'category' => 'Frontend Framework'],
-            ['name' => 'Vue.js', 'description' => 'Vue.js JavaScript framework', 'category' => 'Frontend Framework'],
-            ['name' => 'Angular', 'description' => 'Angular JavaScript framework', 'category' => 'Frontend Framework'],
-            ['name' => 'Node.js', 'description' => 'Node.js JavaScript runtime', 'category' => 'Backend Technology'],
-            ['name' => 'Express', 'description' => 'Express.js web framework', 'category' => 'Backend Framework'],
-            ['name' => 'Django', 'description' => 'Django Python web framework', 'category' => 'Backend Framework'],
-            ['name' => 'Flask', 'description' => 'Flask Python web framework', 'category' => 'Backend Framework'],
-            ['name' => 'SQL', 'description' => 'Structured Query Language', 'category' => 'Database'],
-            ['name' => 'MongoDB', 'description' => 'MongoDB NoSQL database', 'category' => 'Database'],
-            ['name' => 'PostgreSQL', 'description' => 'PostgreSQL relational database', 'category' => 'Database'],
-            ['name' => 'MySQL', 'description' => 'MySQL relational database', 'category' => 'Database'],
-            ['name' => 'Git', 'description' => 'Version control system', 'category' => 'Tools'],
-            ['name' => 'Docker', 'description' => 'Containerization platform', 'category' => 'Tools'],
-            ['name' => 'AWS', 'description' => 'Amazon Web Services', 'category' => 'Cloud'],
-            ['name' => 'Azure', 'description' => 'Microsoft Azure cloud platform', 'category' => 'Cloud'],
-            ['name' => 'Google Cloud', 'description' => 'Google Cloud Platform', 'category' => 'Cloud'],
-            ['name' => 'Data Structures', 'description' => 'Data structures concepts', 'category' => 'Computer Science'],
-            ['name' => 'Algorithms', 'description' => 'Algorithm design and analysis', 'category' => 'Computer Science'],
-            ['name' => 'System Design', 'description' => 'System design principles', 'category' => 'Software Engineering'],
-            ['name' => 'OOP', 'description' => 'Object-oriented programming', 'category' => 'Programming Paradigm'],
-            ['name' => 'REST API', 'description' => 'RESTful API design', 'category' => 'Web Development'],
+        $categories = [
+            'Frontend' => ['React', 'Vue', 'Angular', 'Svelte', 'CSS', 'HTML', 'JavaScript', 'TypeScript'],
+            'Backend' => ['Laravel', 'PHP', 'Node.js', 'Python', 'Django', 'Ruby', 'Rails', 'Go'],
+            'DevOps' => ['Docker', 'Kubernetes', 'AWS', 'Azure', 'CI/CD', 'Linux', 'Nginx'],
+            'Database' => ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite'],
+            'Mobile' => ['React Native', 'Flutter', 'iOS', 'Android', 'Swift', 'Kotlin'],
         ];
 
-        foreach ($tags as $tag) {
-            DB::table('tags')->updateOrInsert(
-                ['name' => $tag['name']],
-                [
-                    'description' => $tag['description'],
-                    'category' => $tag['category'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
+        foreach ($categories as $category => $tags) {
+            foreach ($tags as $tagName) {
+                // Check if tag exists
+                $exists = DB::table('tags')->where('name', $tagName)->exists();
+                
+                if (!$exists) {
+                    DB::table('tags')->insert([
+                        'name' => $tagName,
+                        'category' => $category,
+                        'description' => "Questions related to $tagName",
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                } else {
+                    // Update category if it exists but has no category
+                    DB::table('tags')
+                        ->where('name', $tagName)
+                        ->update(['category' => $category]);
+                }
+            }
         }
     }
 }

@@ -262,28 +262,28 @@ export default function QuestionsIndex({ auth, questions }) {
                                 </div>
                             </motion.div>
                         ))}
-                    </div>
 
-                    {questions.links && questions.links.length > 3 && (
-                        <div className="mt-8 flex items-center justify-center">
-                            <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                                {questions.links.map((link, index) => (
-                                    <Link
-                                        key={index}
-                                        href={link.url || '#'}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
-                                        className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${link.active
-                                            ? 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                                            : 'text-slate-400 ring-1 ring-inset ring-white/10 hover:bg-white/5 focus:outline-offset-0'
-                                            } ${index === 0 ? 'rounded-l-md' : ''
-                                            } ${index === questions.links.length - 1 ? 'rounded-r-md' : ''
-                                            } ${!link.url ? 'pointer-events-none opacity-50' : ''
-                                            }`}
-                                    />
-                                ))}
-                            </nav>
-                        </div>
-                    )}
+                        {questions.links && questions.links.length > 3 && (
+                            <div className="mt-8 flex items-center justify-center">
+                                <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                                    {questions.links.map((link, index) => (
+                                        <Link
+                                            key={index}
+                                            href={link.url || '#'}
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${link.active
+                                                ? 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                                                : 'text-slate-400 ring-1 ring-inset ring-white/10 hover:bg-white/5 focus:outline-offset-0'
+                                                } ${index === 0 ? 'rounded-l-md' : ''
+                                                } ${index === questions.links.length - 1 ? 'rounded-r-md' : ''
+                                                } ${!link.url ? 'pointer-events-none opacity-50' : ''
+                                                }`}
+                                        />
+                                    ))}
+                                </nav>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>
