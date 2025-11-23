@@ -21,6 +21,7 @@ export default function Dashboard({ auth, randomQuestions = [] }) {
         // Always clear previous state and start loading
         setAiErrors(prev => ({ ...prev, [questionId]: null }));
         setLoadingAi(prev => ({ ...prev, [questionId]: true }));
+        setExpandedQuestions(prev => ({ ...prev, [questionId]: true }));
 
         // If we already have an answer, we might want to just show it, but the user said "always open the section"
         // so we'll proceed to fetch or just let the state update trigger the open.
@@ -152,7 +153,7 @@ export default function Dashboard({ auth, randomQuestions = [] }) {
                                         </div>
 
                                         <AnimatePresence>
-                                            {(expandedQuestions[question.id || question.question_id] || aiAnswers[question.id || question.question_id] || loadingAi[question.id || question.question_id] || aiErrors[question.id || question.question_id]) && (
+                                            {expandedQuestions[question.id || question.question_id] && (
                                                 <motion.div
                                                     initial={{ height: 0, opacity: 0 }}
                                                     animate={{ height: 'auto', opacity: 1 }}

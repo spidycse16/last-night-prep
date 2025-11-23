@@ -21,6 +21,7 @@ export default function QuestionsIndex({ auth, questions }) {
         // Always clear previous state and start loading
         setAiErrors(prev => ({ ...prev, [questionId]: null }));
         setLoadingAi(prev => ({ ...prev, [questionId]: true }));
+        setExpandedQuestions(prev => ({ ...prev, [questionId]: true }));
 
         if (aiAnswers[questionId]) {
             setLoadingAi(prev => ({ ...prev, [questionId]: false }));
@@ -183,7 +184,7 @@ export default function QuestionsIndex({ auth, questions }) {
 
                                             {/* Expanded Content */}
                                             <AnimatePresence>
-                                                {(expandedQuestions[question.question_id] || aiAnswers[question.question_id] || loadingAi[question.question_id] || aiErrors[question.question_id]) && (
+                                                {expandedQuestions[question.question_id] && (
                                                     <motion.div
                                                         initial={{ height: 0, opacity: 0 }}
                                                         animate={{ height: 'auto', opacity: 1 }}
