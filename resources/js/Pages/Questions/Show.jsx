@@ -14,6 +14,7 @@ export default function QuestionsShow({ auth, question, answers, tags }) {
 
     return (
         <AuthenticatedLayout
+            user={auth.user}
             header={
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
@@ -62,20 +63,19 @@ export default function QuestionsShow({ auth, question, answers, tags }) {
                                     </h1>
                                     <div className="mt-2 flex flex-wrap gap-2">
                                         {tags.map((tag, index) => (
-                                            <span 
-                                                key={index} 
+                                            <span
+                                                key={index}
                                                 className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900 dark:text-indigo-100"
                                             >
                                                 {tag.name}
                                             </span>
                                         ))}
-                                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                            question.difficulty === 'easy' 
-                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' 
-                                                : question.difficulty === 'medium' 
-                                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100' 
+                                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${question.difficulty === 'easy'
+                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
+                                                : question.difficulty === 'medium'
+                                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
                                                     : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
-                                        }`}>
+                                            }`}>
                                             {question.difficulty}
                                         </span>
                                     </div>
@@ -111,13 +111,12 @@ export default function QuestionsShow({ auth, question, answers, tags }) {
                             <div className="space-y-6">
                                 {answers.length > 0 ? (
                                     answers.map((answer) => (
-                                        <div 
-                                            key={answer.answer_id} 
-                                            className={`border-b border-gray-200 pb-6 last:border-0 last:pb-0 dark:border-gray-700 ${
-                                                answer.is_accepted 
-                                                    ? 'bg-green-50 dark:bg-green-900/20' 
+                                        <div
+                                            key={answer.answer_id}
+                                            className={`border-b border-gray-200 pb-6 last:border-0 last:pb-0 dark:border-gray-700 ${answer.is_accepted
+                                                    ? 'bg-green-50 dark:bg-green-900/20'
                                                     : ''
-                                            }`}
+                                                }`}
                                         >
                                             <div className="flex">
                                                 <div className="flex flex-col items-center text-center text-sm text-gray-500 dark:text-gray-400">
@@ -133,8 +132,8 @@ export default function QuestionsShow({ auth, question, answers, tags }) {
                                                         </svg>
                                                     </button>
                                                     {answer.is_accepted && (
-                                                        <button 
-                                                            className="mt-2 text-green-600 dark:text-green-400" 
+                                                        <button
+                                                            className="mt-2 text-green-600 dark:text-green-400"
                                                             title="Accepted answer"
                                                         >
                                                             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

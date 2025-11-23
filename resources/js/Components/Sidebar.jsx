@@ -23,16 +23,19 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 </h3>
 
                 <div className="space-y-2">
-                    {categories && Object.keys(categories).length > 0 ? (
-                        Object.entries(categories).map(([category, tags]) => (
-                            <div key={category} className="border-b border-white/5 last:border-0 pb-2 last:pb-0">
+                    {categories && categories.length > 0 ? (
+                        categories.map((category) => (
+                            <div key={category.id} className="border-b border-white/5 last:border-0 pb-2 last:pb-0">
                                 <button
-                                    onClick={() => setExpandedCategories(prev => ({ ...prev, [category]: !prev[category] }))}
+                                    onClick={() => setExpandedCategories(prev => ({ ...prev, [category.id]: !prev[category.id] }))}
                                     className="w-full flex items-center justify-between py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors group"
                                 >
-                                    <span className="whitespace-nowrap">{category || 'Uncategorized'}</span>
+                                    <span className="whitespace-nowrap flex items-center gap-2">
+                                        {category.icon && <span>{category.icon}</span>}
+                                        {category.name}
+                                    </span>
                                     <svg
-                                        className={`w-4 h-4 text-slate-500 group-hover:text-white transition-transform ${expandedCategories[category] ? 'rotate-180' : ''}`}
+                                        className={`w-4 h-4 text-slate-500 group-hover:text-white transition-transform ${expandedCategories[category.id] ? 'rotate-180' : ''}`}
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -42,7 +45,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                 </button>
 
                                 <AnimatePresence>
-                                    {expandedCategories[category] && (
+                                    {expandedCategories[category.id] && (
                                         <motion.div
                                             initial={{ height: 0, opacity: 0 }}
                                             animate={{ height: 'auto', opacity: 1 }}
@@ -50,7 +53,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                             className="overflow-hidden"
                                         >
                                             <div className="pl-2 py-2 space-y-1">
-                                                {tags.map(tag => (
+                                                {category.tags && category.tags.map(tag => (
                                                     <Link
                                                         key={tag.tag_id}
                                                         href={route('questions.index', { tag: tag.name })}

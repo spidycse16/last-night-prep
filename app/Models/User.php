@@ -52,7 +52,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password_hash' => 'hashed',
+            'password' => 'hashed',
             'skills' => 'array',
             'metadata' => 'array',
             'email_verified' => 'boolean',
@@ -60,9 +60,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the password for authentication.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    /**
      * Get the password attribute.
      *
-     * @param  string  $value
      * @return string
      */
     public function getPasswordAttribute()
@@ -78,6 +87,6 @@ class User extends Authenticatable
      */
     public function setPasswordAttribute($value)
     {
-        $this->password_hash = $value;
+        $this->attributes['password_hash'] = bcrypt($value);
     }
 }

@@ -32,12 +32,28 @@ class HandleInertiaRequests extends Middleware
         $categories = [];
         
         if ($request->user()) {
-            $categories = \Illuminate\Support\Facades\DB::table('tags')
-                ->select('tag_id', 'name', 'category', 'question_count')
-                ->orderBy('category')
-                ->orderBy('name')
+            $categories = \Illuminate\Support\Facades\DB::table('categories')
+                ->select('categories.id', 'categories.name', 'categories.slug', 'categories.icon', 'categories.color')
+                ->orderBy('categories.name')
                 ->get()
-                ->groupBy('category');
+                ->map(function ($category) {
+                    // Get tags for this category
+                    $tags = \Illuminate\Support\Facades\DB::table('category_tag')
+                        ->join('tags', 'category_tag.tag_id', '=', 'tags.tag_id')
+                        ->where('category_tag.category_id', $category->id)
+                        ->select('tags.tag_id', 'tags.name', 'tags.question_count')
+                        ->orderBy('tags.name')
+                        ->get();
+                    
+                    return [
+                        'id' => $category->id,
+                        'name' => $category->name,
+                        'slug' => $category->slug,
+                        'icon' => $category->icon,
+                        'color' => $category->color,
+                        'tags' => $tags
+                    ];
+                });
         }
 
         return [

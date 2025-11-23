@@ -28,6 +28,7 @@ export default function QuestionsCreate({ auth, tags }) {
 
     return (
         <AuthenticatedLayout
+            user={auth.user}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                     Ask a Question
@@ -90,11 +91,10 @@ export default function QuestionsCreate({ auth, tags }) {
                                                 key={tag.tag_id}
                                                 type="button"
                                                 onClick={() => toggleTag(tag.tag_id)}
-                                                className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${
-                                                    selectedTags.includes(tag.tag_id)
+                                                className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${selectedTags.includes(tag.tag_id)
                                                         ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-100'
                                                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-                                                }`}
+                                                    }`}
                                             >
                                                 {tag.name}
                                             </button>
