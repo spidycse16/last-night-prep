@@ -13,15 +13,22 @@ class GeminiApiKeySeeder extends Seeder
      */
     public function run(): void
     {
+        $apiKey = env('GEMINI_API_KEY');
+
+        if (!$apiKey) {
+            $this->command->warn('GEMINI_API_KEY not set in .env file. Skipping Gemini API key seeding.');
+            return;
+        }
+
         // Check if Gemini API key already exists
         $existingKey = DB::table('api_keys')->where('provider', 'gemini')->first();
-        
+
         if (!$existingKey) {
             // Insert Google Gemini API key
             DB::table('api_keys')->insert([
                 [
                     'provider' => 'gemini',
-                    'api_key' => 'AIzaSyDFaIXx6q8TbGICCfnZlUmq2UdJqHDAOY0',
+                    'api_key' => $apiKey,
                     'name' => 'Google Gemini API Key',
                     'is_active' => true,
                     'daily_limit' => 1000,
@@ -35,7 +42,7 @@ class GeminiApiKeySeeder extends Seeder
             DB::table('api_keys')
                 ->where('provider', 'gemini')
                 ->update([
-                    'api_key' => 'AIzaSyDFaIXx6q8TbGICCfnZlUmq2UdJqHDAOY0',
+                    'api_key' => $apiKey,
                     'name' => 'Google Gemini API Key',
                     'is_active' => true,
                     'updated_at' => now(),
